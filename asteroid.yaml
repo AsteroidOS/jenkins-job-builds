@@ -1,0 +1,183 @@
+- defaults:
+    name: global
+    github: AsteroidOS
+    kernel: msm
+    android: lollipop
+
+- job-template:
+        name: 'jjb-asteroid-image-{watch}'
+        node: gentoo && linux && user
+        scm:
+        - git:
+            url: https://github.com/AsteroidOS/asteroid
+            skip-tag: true
+            wipe-workspace: false
+        builders:
+        - shell: 'rm -f *.tar'
+        - shell: 'rm -fr build/'
+        - shell: "mkdir -p src/oe-core/bitbake src/meta-{{asteroid,{watch}-hybris,qt5,openembedded,smartphone}}"
+        - cx: { proj: oe-core }
+        - cx: { proj: meta-openembedded }
+        - cx: { proj: meta-smartphone }
+        - cx: { proj: meta-qt5 }
+        - cx: { proj: meta-asteroid }
+        - cx: { proj: 'meta-{watch}-hybris' }
+        - copyextract:
+            proj: bitbake
+            path: oe-core/bitbake
+        - shell: |
+            . ./prepare-build.sh {watch}
+            bitbake asteroid-image
+        - shell: |
+            . ./prepare-build.sh {watch}
+            bitbake meta-toolchain-qt5
+        publishers:
+        - archive:
+            artifacts: 'build/tmp-glibc/deploy/images/{watch}/*,build/tmp-glibc/deploy/sdk/*'
+            fingerprint: true
+        triggers:
+        - reverse:
+            jobs:
+            - jjb-oe-core
+            - jjb-bitbake
+            - jjb-meta-asteroid
+            - jjb-meta-{watch}-hybris
+            - jjb-meta-openembedded
+            - jjb-meta-qt5
+            - jjb-meta-smartphone
+            result: success
+
+- job-template:
+        name: 'jjb-{repo}'
+        node: gentoo && linux && user
+        scm:
+        - git:
+            clean:
+              before: true
+            url: '{url}'
+            branches:
+            - '{branch}'
+            skip-tag: true
+        builders:
+        - shell: |
+            tempfile=$(mktemp)
+            tar cf $tempfile .
+            cp $tempfile $BUILD_TAG.tar
+        publishers:
+        - archive:
+            artifacts: "*.tar"
+            fingerprint: true
+        - downstream-ext:
+            projects:
+            - jjb-asteroid-image-dory
+            - jjb-asteroid-image-bass
+            - jjb-asteroid-image-tetra
+            only-on-local-scm-change: true
+        properties:
+        - copyartifact:
+            projects: jjb-asteroid-image-*
+        triggers:
+        - pollscm:
+            cron: "H */8 * * *"
+
+- job-template:
+        name: 'jjb-meta-{watch}-hybris'
+        node: gentoo && linux && user
+        scm:
+        - git:
+            clean:
+              before: true
+            url: 'https://github.com/{github}/meta-{watch}-hybris'
+            branches:
+            - '**'
+            skip-tag: true
+        builders:
+        - shell: |
+            tempfile=$(mktemp)
+            tar cf $tempfile .
+            cp $tempfile $BUILD_TAG.tar
+        publishers:
+        - archive:
+            artifacts: "*.tar"
+            fingerprint: true
+        - downstream-ext:
+            projects:
+            - jjb-asteroid-image-{watch}
+            only-on-local-scm-change: true
+        properties:
+        - copyartifact:
+            projects: jjb-asteroid-image-{watch}
+        triggers:
+        - pollscm:
+            cron: "H */8 * * *"
+
+- builder:
+    name: copyextract
+    builders:
+    - copyartifact:
+        project: '{proj}'
+    - shell: 'tar xf jenkins-{proj}-*.tar -C src/{path}'
+
+- builder:
+    name: cx
+    builders:
+    - copyextract:
+        proj: 'jjb-{proj}'
+        path: '{proj}'
+
+- project:
+        name: meta-asteroid-repos
+        repo:
+        - oe-core:
+            url: git://git.openembedded.org/openembedded-core
+            branch: '*/jethro'
+        - meta-openembedded:
+            url: https://github.com/openembedded/meta-openembedded.git
+            branch: '*/jethro'
+        - meta-smartphone:
+            url: https://github.com/shr-distribution/meta-smartphone
+            branch: '*/jethro'
+        - meta-qt5:
+            url: https://github.com/meta-qt5/meta-qt5.git
+            branch: '*/jethro'
+        - bitbake:
+            url: git://git.openembedded.org/bitbake
+            branch: '*/1.28'
+        - meta-asteroid:
+            url: https://github.com/AsteroidOS/meta-asteroid
+            branch: '*/master'
+        jobs:
+        - 'jjb-{repo}'
+
+- project:
+        name: asteroid-images
+        jobs:
+        - 'jjb-asteroid-image-{watch}'
+        - 'jjb-meta-{watch}-hybris'
+        - 'jjb-kernel-{kernel}-{watch}'
+        watch:
+        - dory
+        - bass:
+            github: theappleman
+        - tetra:
+            kernel: bcm
+        - sparrow:
+            github: Lrs121
+            android: marshmallow
+
+- job-template:
+    name: jjb-kernel-{kernel}-{watch}
+    node: linux && user
+    scm:
+    - git:
+        url: https://android.googlesource.com/kernel/{kernel}
+        branches:
+        - '*/android-{kernel}-{watch}-3.10-{android}-mr1-wear-release'
+        skip-tag: true
+        timeout: 60
+    builders:
+    - shell: make ARCH=arm {watch}_defconfig
+    publishers:
+    - archive:
+        artifacts: .config
+        fingerprint: true
