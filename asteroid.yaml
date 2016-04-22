@@ -23,7 +23,7 @@
         - cx: { proj: meta-asteroid }
         - cx: { proj: 'meta-{watch}-hybris' }
         - copyextract:
-            proj: bitbake
+            proj: asteroid-bitbake
             path: oe-core/bitbake
         - shell: |
             . ./prepare-build.sh {watch}
