@@ -5,7 +5,7 @@
     android: lollipop
 
 - job-template:
-        name: 'jjb-asteroid-image-{watch}'
+        name: 'asteroid-asteroid-image-{watch}'
         node: gentoo && linux && user
         scm:
         - git:
@@ -38,17 +38,17 @@
         triggers:
         - reverse:
             jobs:
-            - jjb-oe-core
-            - jjb-bitbake
-            - jjb-meta-asteroid
-            - jjb-meta-{watch}-hybris
-            - jjb-meta-openembedded
-            - jjb-meta-qt5
-            - jjb-meta-smartphone
+            - asteroid-oe-core
+            - asteroid-bitbake
+            - asteroid-meta-asteroid
+            - asteroid-meta-{watch}-hybris
+            - asteroid-meta-openembedded
+            - asteroid-meta-qt5
+            - asteroid-meta-smartphone
             result: success
 
 - job-template:
-        name: 'jjb-{repo}'
+        name: 'asteroid-{repo}'
         node: gentoo && linux && user
         scm:
         - git:
@@ -69,19 +69,19 @@
             fingerprint: true
         - downstream-ext:
             projects:
-            - jjb-asteroid-image-dory
-            - jjb-asteroid-image-bass
-            - jjb-asteroid-image-tetra
+            - asteroid-asteroid-image-dory
+            - asteroid-asteroid-image-bass
+            - asteroid-asteroid-image-tetra
             only-on-local-scm-change: true
         properties:
         - copyartifact:
-            projects: jjb-asteroid-image-*
+            projects: asteroid-asteroid-image-*
         triggers:
         - pollscm:
             cron: "H */8 * * *"
 
 - job-template:
-        name: 'jjb-meta-{watch}-hybris'
+        name: 'asteroid-meta-{watch}-hybris'
         node: gentoo && linux && user
         scm:
         - git:
@@ -102,11 +102,11 @@
             fingerprint: true
         - downstream-ext:
             projects:
-            - jjb-asteroid-image-{watch}
+            - asteroid-asteroid-image-{watch}
             only-on-local-scm-change: true
         properties:
         - copyartifact:
-            projects: jjb-asteroid-image-{watch}
+            projects: asteroid-asteroid-image-{watch}
         triggers:
         - pollscm:
             cron: "H */8 * * *"
@@ -122,7 +122,7 @@
     name: cx
     builders:
     - copyextract:
-        proj: 'jjb-{proj}'
+        proj: 'asteroid-{proj}'
         path: '{proj}'
 
 - project:
@@ -147,14 +147,14 @@
             url: https://github.com/AsteroidOS/meta-asteroid
             branch: '*/master'
         jobs:
-        - 'jjb-{repo}'
+        - 'asteroid-{repo}'
 
 - project:
         name: asteroid-images
         jobs:
-        - 'jjb-asteroid-image-{watch}'
-        - 'jjb-meta-{watch}-hybris'
-        - 'jjb-kernel-{kernel}-{watch}'
+        - 'asteroid-asteroid-image-{watch}'
+        - 'asteroid-meta-{watch}-hybris'
+        - 'asteroid-kernel-{kernel}-{watch}'
         watch:
         - dory
         - bass:
@@ -166,7 +166,7 @@
             android: marshmallow
 
 - job-template:
-    name: jjb-kernel-{kernel}-{watch}
+    name: asteroid-kernel-{kernel}-{watch}
     node: linux && user
     scm:
     - git:
