@@ -5,7 +5,7 @@
     android: lollipop
 
 - job-template:
-        name: 'asteroid-asteroid-image-{watch}'
+        name: 'asteroid-image-{watch}'
         node: gentoo && linux && user
         scm:
         - git:
@@ -69,9 +69,9 @@
             fingerprint: true
         - downstream-ext:
             projects:
-            - asteroid-asteroid-image-dory
-            - asteroid-asteroid-image-bass
-            - asteroid-asteroid-image-tetra
+            - asteroid-image-dory
+            - asteroid-image-bass
+            - asteroid-image-tetra
             only-on-local-scm-change: true
         properties:
         - copyartifact:
@@ -102,11 +102,11 @@
             fingerprint: true
         - downstream-ext:
             projects:
-            - asteroid-asteroid-image-{watch}
+            - asteroid-image-{watch}
             only-on-local-scm-change: true
         properties:
         - copyartifact:
-            projects: asteroid-asteroid-image-{watch}
+            projects: asteroid-image-{watch}
         triggers:
         - pollscm:
             cron: "H */8 * * *"
@@ -152,7 +152,7 @@
 - project:
         name: asteroid-images
         jobs:
-        - 'asteroid-asteroid-image-{watch}'
+        - 'asteroid-image-{watch}'
         - 'asteroid-meta-{watch}-hybris'
         - 'asteroid-kernel-{kernel}-{watch}'
         watch:
