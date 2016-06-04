@@ -78,7 +78,7 @@
             projects: asteroid-asteroid-image-*
         triggers:
         - pollscm:
-            cron: "H */8 * * *"
+            cron: "H H * * *"
 
 - job-template:
         name: 'asteroid-meta-{watch}-hybris'
@@ -109,7 +109,7 @@
             projects: asteroid-image-{watch}
         triggers:
         - pollscm:
-            cron: "H */8 * * *"
+            cron: "H H * * *"
 
 - builder:
     name: copyextract
