@@ -6,7 +6,6 @@
 
 - job-template:
         name: 'asteroid-image-{watch}'
-        node: gentoo && linux && user
         scm:
         - git:
             url: https://github.com/AsteroidOS/asteroid
@@ -49,7 +48,6 @@
 
 - job-template:
         name: 'asteroid-{repo}'
-        node: gentoo && linux && user
         scm:
         - git:
             clean:
@@ -82,7 +80,6 @@
 
 - job-template:
         name: 'asteroid-meta-{watch}-hybris'
-        node: gentoo && linux && user
         scm:
         - git:
             clean:
@@ -165,7 +162,6 @@
 
 - job-template:
     name: asteroid-kernel-{kernel}-{watch}
-    node: linux && user
     scm:
     - git:
         url: https://android.googlesource.com/kernel/{kernel}
