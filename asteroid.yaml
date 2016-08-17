@@ -162,7 +162,6 @@
         - tetra:
             kernel: bcm
         - sparrow:
-            github: Lrs121
             android: marshmallow
 
 - job-template:
