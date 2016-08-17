@@ -158,7 +158,6 @@
         watch:
         - dory
         - bass:
-            github: theappleman
         - tetra:
             kernel: bcm
         - sparrow:
