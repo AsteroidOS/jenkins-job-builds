@@ -156,7 +156,7 @@
         - 'asteroid-kernel-{kernel}-{watch}'
         watch:
         - dory
-        - bass:
+        - bass
         - tetra:
             kernel: bcm
         - sparrow:
