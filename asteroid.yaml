@@ -73,7 +73,7 @@
             only-on-local-scm-change: true
         properties:
         - copyartifact:
-            projects: asteroid-asteroid-image-*
+            projects: asteroid-image-*
         triggers:
         - pollscm:
             cron: "H H * * *"
