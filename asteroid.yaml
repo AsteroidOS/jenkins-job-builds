@@ -29,9 +29,6 @@
         - shell: |
             . ./prepare-build.sh {watch}
             bitbake asteroid-image
-        - shell: |
-            . ./prepare-build.sh {watch}
-            bitbake meta-toolchain-qt5
         publishers:
         - archive:
             artifacts: 'build/tmp-glibc/deploy/images/{watch}/*,build/tmp-glibc/deploy/sdk/*'
