@@ -177,3 +177,46 @@
     - archive:
         artifacts: .config
         fingerprint: true
+
+- job:
+    name: asteroid-aosp-msm8226
+    builders:
+    - shell: |
+        test -d aosp || mkdir aosp
+        if test -f repo; then
+                pushd aosp
+        else
+                curl https://storage.googleapis.com/git-repo-downloads/repo > repo
+                chmod a+x repo
+                pushd aosp
+                ../repo init -u https://github.com/AsteroidOS/android_manifest || true
+        fi
+
+        ../repo sync
+
+        . build/envsetup.sh
+        export TARGET_USES_C2D_COMPOSITION=true
+        export TARGET_USES_QCOM_BSP=true
+        export TARGET_BOARD_PLATFORM=msm8226
+
+        grep -q msm8x26/kernel-headers hardware/qcom/display/msm8226/common.mk || \
+                tee -a hardware/qcom/display/msm8226/common.mk <<<'common_includes += $(LOCAL_PATH)/../../../msm8x26/kernel-headers'
+
+        mmma hardware/qcom/display/msm8226/
+        mmma frameworks/native/cmds/servicemanager/
+        mmma system/core/logd/
+        mmma system/core/init/
+        popd
+
+        ./aosp/libhybris/utils/extract-headers.sh aosp include
+
+        test -d system || mkdir system
+        cp -r aosp/out/target/product/generic/system/* system
+        test -d system/bin || mkdir system/bin
+        cp aosp/out/target/product/generic/root/init system/bin
+
+        tar cf system.tar system include
+    publishers:
+    - archive:
+        artifacts: system.tar
+        fingerprint: true
