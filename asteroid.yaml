@@ -69,6 +69,7 @@
             - asteroid-image-dory
             - asteroid-image-bass
             - asteroid-image-tetra
+            - asteroid-image-sparrow
             only-on-local-scm-change: true
         properties:
         - copyartifact:
