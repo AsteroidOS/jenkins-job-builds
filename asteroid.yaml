@@ -127,19 +127,19 @@
         repo:
         - oe-core:
             url: git://git.openembedded.org/openembedded-core
-            branch: '*/jethro'
+            branch: '*/krogoth'
         - meta-openembedded:
             url: https://github.com/openembedded/meta-openembedded.git
-            branch: '*/jethro'
+            branch: '*/krogoth'
         - meta-smartphone:
             url: https://github.com/shr-distribution/meta-smartphone
-            branch: '*/jethro'
+            branch: '*/krogoth'
         - meta-qt5:
             url: https://github.com/meta-qt5/meta-qt5.git
-            branch: '*/jethro'
+            branch: '*/krogoth'
         - bitbake:
             url: git://git.openembedded.org/bitbake
-            branch: '*/1.28'
+            branch: '*/1.30'
         - meta-asteroid:
             url: https://github.com/AsteroidOS/meta-asteroid
             branch: '*/master'
