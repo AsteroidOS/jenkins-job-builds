@@ -14,7 +14,6 @@
         builders:
         - shell: 'rm -f *.tar'
         - shell: 'rm -fr build/'
-        - shell: "mkdir -p src/oe-core/bitbake src/meta-asteroid src/meta-{watch}-hybris src/meta-qt5 src/meta-openembedded src/meta-smartphone"
         - cx: { proj: oe-core }
         - cx: { proj: meta-openembedded }
         - cx: { proj: meta-smartphone }
@@ -113,7 +112,9 @@
     builders:
     - copyartifact:
         project: '{proj}'
-    - shell: 'tar xf jenkins-{proj}-*.tar -C src/{path}'
+    - shell: |
+        mkdir -p src/{path}
+        tar xf jenkins-{proj}-*.tar -C src/{path}
 
 - builder:
     name: cx
