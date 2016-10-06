@@ -19,7 +19,10 @@
         - cx: { proj: meta-smartphone }
         - cx: { proj: meta-qt5 }
         - cx: { proj: meta-asteroid }
-        - cx: { proj: 'meta-{watch}-hybris' }
+        - cx: { proj: 'meta-bass-hybris' }
+        - cx: { proj: 'meta-dory-hybris' }
+        - cx: { proj: 'meta-tetra-hybris' }
+        - cx: { proj: 'meta-sparrow-hybris' }
         - copyextract:
             proj: asteroid-bitbake
             path: oe-core/bitbake
